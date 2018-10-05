@@ -2,7 +2,7 @@ package lectures.part1basics
 
 object DefaultArgs extends App {
   def trFactorial(n: Int, accum: Int = 1): Int = {
-    if (n <= 1) acc
+    if (n <= 1) accum
     else trFactorial(n - 1, n * accum)
   }
 
