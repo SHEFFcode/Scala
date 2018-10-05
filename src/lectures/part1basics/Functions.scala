@@ -18,4 +18,18 @@ object Functions extends App {
   println(aRepeaterFunction("Hello", 3))
 
   //WHEN U NEED LOOPS, USE RECURSION
+
+  def aFunctionWithSideEffects(aString: String): Unit = {
+    println(aString)
+  }
+
+  aFunctionWithSideEffects("Hello")
+
+  // Functions with other functions inside of them
+  def aBigFunction(n: Int): Int = {
+    def aSmallerFunction(a: Int, b: Int): Int = {
+      a + b
+    }
+    aSmallerFunction(1, 2)
+  }
 }
