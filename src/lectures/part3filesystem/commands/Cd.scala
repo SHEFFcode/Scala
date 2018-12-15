@@ -20,7 +20,7 @@ class Cd(dir: String) extends Command {
     val wd = state.wd
 
     //2. Find absolute path of the directory I want to cd to
-    val absolutePath = {
+      val absolutePath = {
       if (dir.startsWith(Directory.SEPARATOR)) "/"
       else if (wd.isRoot) wd.path + dir
       else wd.path + Directory.SEPARATOR + dir
@@ -50,10 +50,31 @@ class Cd(dir: String) extends Command {
         }
       }
 
+      @tailrec
+      def collapseRelativeTokens(path: List[String], accumulator: List[String]): List[String] = {
+        /*
+        Examples of functionality
+        ["a", "."] => ["a"]
+        ["a", "b", ".", "."] => ["a", "b"]
+        ["a", ".."] => []
+        ["a", "b", ".."] => ["a"]
+         */
+
+        if (path.isEmpty) accumulator
+        else if (".".equals(path.head)) collapseRelativeTokens(path.tail, accumulator)
+        else if ("..".equals(path.head)) {
+          if (accumulator.isEmpty) null
+          else collapseRelativeTokens(path.tail, accumulator.init)
+        } else collapseRelativeTokens(path.tail, accumulator :+ path.head)
+      }
+
       //1. Tokens
       val tokens: List[String] = path.substring(1).split(Directory.SEPARATOR).toList
+      //1.5 eliminate / collapse relative tokens
+      val newTokens = collapseRelativeTokens(tokens, List())
       //2. Navigate to the correct entry
-      findEntryHelper(root, tokens).asDirectory
+      if (newTokens == null) null
+      else findEntryHelper(root, newTokens).asDirectory
     }
 
 }
