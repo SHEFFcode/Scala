@@ -20,6 +20,8 @@ class Directory(override val parentPath: String, override val name: String, val 
 
   def addEntry(newEntry: DirEntry): Directory = new Directory(parentPath, name, contents :+ newEntry)
 
+  def isRoot: Boolean = parentPath.isEmpty
+
   def findEntry(entryName: String): DirEntry = {
     @tailrec
     def findEntryHelper(name: String, contentList: List[DirEntry]): DirEntry = {
@@ -38,6 +40,10 @@ class Directory(override val parentPath: String, override val name: String, val 
   override def getType: String = "Directory"
 
   override def asFile: File = throw new FileSystemException("A directory cannot be converted into a file!")
+
+  override def isDirectory: Boolean = true
+
+  override def isFile: Boolean = false
 }
 
 object Directory {
