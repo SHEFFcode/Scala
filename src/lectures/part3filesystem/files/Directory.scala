@@ -1,4 +1,4 @@
-package lectures.files
+package lectures.part3filesystem.files
 
 import scala.annotation.tailrec
 

@@ -1,6 +1,6 @@
-package lectures.FileSystem
+package lectures.part3filesystem.FileSystem
 
-import lectures.files.Directory
+import lectures.part3filesystem.files.Directory
 
 class State(val root: Directory, val wd: Directory, val output: String) {
   def show: Unit = {

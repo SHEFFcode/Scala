@@ -1,9 +1,9 @@
-package lectures.FileSystem
+package lectures.part3filesystem.FileSystem
 
 import java.util.Scanner
 
-import lectures.commands.Command
-import lectures.files.Directory
+import lectures.part3filesystem.commands.Command
+import lectures.part3filesystem.files.Directory
 
 object FileSystem extends App {
   val root = Directory.ROOT

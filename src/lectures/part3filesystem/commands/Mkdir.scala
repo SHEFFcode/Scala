@@ -1,6 +1,6 @@
-package lectures.commands
-import lectures.FileSystem.State
-import lectures.files.Directory
+package lectures.part3filesystem.commands
+import lectures.part3filesystem.FileSystem.State
+import lectures.part3filesystem.files.Directory
 
 class Mkdir(name: String) extends Command {
   override def apply(state: State): State = {

@@ -1,6 +1,6 @@
-package lectures.commands
+package lectures.part3filesystem.commands
 
-import lectures.FileSystem.State
+import lectures.part3filesystem.FileSystem.State
 
 trait Command {
   def apply(state: State): State // abstract method

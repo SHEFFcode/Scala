@@ -1,6 +1,6 @@
-package lectures.commands
-import lectures.FileSystem.State
-import lectures.files.DirEntry
+package lectures.part3filesystem.commands
+import lectures.part3filesystem.FileSystem.State
+import lectures.part3filesystem.files.DirEntry
 
 class Ls extends Command {
   override def apply(state: State): State = {
