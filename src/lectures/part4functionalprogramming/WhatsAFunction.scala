@@ -39,6 +39,9 @@ object WhatsAFunction extends App {
     }
   }
 
+  // Another way to write a super adder
+  val superSuperAdder = (x: Int) => (y: Int) => x + y // curried function a lot shorter
+
   val adder3 = superAdder(3)(4) // curried function
 
 }
