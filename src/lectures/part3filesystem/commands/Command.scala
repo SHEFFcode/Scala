@@ -2,8 +2,8 @@ package lectures.part3filesystem.commands
 
 import lectures.part3filesystem.FileSystem.State
 
-trait Command {
-  def apply(state: State): State // abstract method
+trait Command extends (State => State) { // since we are implementing (state => state) we don't need the apply, since funcs already have apply
+//  def apply(state: State): State // abstract method
 }
 
 object Command {
@@ -14,6 +14,7 @@ object Command {
   val CD = "cd"
   val RM = "rm"
   val ECHO = "echo"
+  val CAT = "cat"
 
   def emptyCommand: Command = new Command {
     override def apply(state: State): State = state
@@ -27,24 +28,25 @@ object Command {
     val tokens = input.split(" ") // arrays of String holding all the tokens
 
     if (input.isEmpty || tokens.isEmpty) emptyCommand
-    else if (MKDIR.equals(tokens(0))) {
-      if (tokens.length < 2) incompleteCommand(MKDIR)
-      else new Mkdir(tokens(1))
-    } else if (LS.equals(tokens(0))) {
-      new Ls
-    } else if (PWD.equals(tokens(0))) {
-      new Pwd
-    } else if (TOUCH.equals(tokens(0))) {
-      new Touch(tokens(1))
-    } else if (CD.equals(tokens(0))) {
-      if (tokens.length < 2) incompleteCommand(MKDIR)
-      else new Cd(tokens(1))
-    } else if (RM.equals(tokens(0))) {
-      if (tokens.length < 2) incompleteCommand(RM)
-      else new Rm(tokens(1))
-    } else if (ECHO.equals(tokens(0))) {
-      if (tokens.length < 2) incompleteCommand(ECHO)
-      else new Echo(tokens.tail)
-    } else new UknownCommand
+    else tokens(0) match {
+      case MKDIR =>
+        if (tokens.length < 2) incompleteCommand(MKDIR)
+        else new Mkdir(tokens(1))
+      case LS => new Ls
+      case PWD => new Pwd
+      case TOUCH =>  new Touch(tokens(1))
+      case CD =>
+        if (tokens.length < 2) incompleteCommand(MKDIR)
+        else new Cd(tokens(1))
+      case RM =>
+        if (tokens.length < 2) incompleteCommand(RM)
+        else new Rm(tokens(1))
+      case ECHO =>
+        if (tokens.length < 2) incompleteCommand(ECHO)
+        else new Echo(tokens.tail)
+      case CAT =>
+        if (tokens.length < 2) incompleteCommand(CAT)
+        else new Cat(tokens(1))
+    }
   }
 }
