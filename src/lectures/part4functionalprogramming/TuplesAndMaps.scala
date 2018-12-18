@@ -1,5 +1,7 @@
 package lectures.part4functionalprogramming
 
+import scala.annotation.tailrec
+
 object TuplesAndMaps extends App {
   //tuples - finite ordered kind of like lists
   val aTuple = Tuple2(2, "Hello scala") // Tuple2[Int, String] aka (Int, String)
@@ -35,7 +37,7 @@ object TuplesAndMaps extends App {
   println(aPhoneBook.filterKeys(x => x.startsWith("J")))
 
   // mapValues
-  println(aPhoneBook.mapValues(number => number * 10))
+  println(aPhoneBook.mapValues(number => number * 10)) // make sure that the resulting keys do not overlap, ie "Jim" vs "JIM" with lowercase will overlap
 
   //conversions to other collections
   println(aPhoneBook.toList) // all the pairings are included in the list
@@ -44,5 +46,57 @@ object TuplesAndMaps extends App {
   val names = List("Bob", "James", "Angela", "Mary", "Daniel", "Jim")
   println(names.groupBy(name => name.charAt(0)))
 
+  /*
+  1. What would happen if I had two original entries "Jim" -> 555 and "JIM" ->  9000
+  !!! Carefull with mapping keys
+  2. Overly simplified social network based on maps
+    - Person = String
+      - add a person to the network
+      - remove a person from the network
+      - friend (mutual)
+      - unfriend (mutual)
 
+      - number of friends of a given person
+      - person with the most friends
+      - how many people have no friends
+      - is there a social connection between two people
+   */
+
+    // add a person to the network
+  def add(network: Map[String, Set[String]], person: String): Map[String, Set[String]] = {
+    network + (person -> Set())
+  }
+  def friend(network: Map[String, Set[String]], a: String, b: String): Map[String, Set[String]] = {
+    val friendsA = network(a) // friend list of person a
+    val friendsB = network(b)
+
+    network + (a -> (friendsA + b)) + (b -> (friendsB + a))
+  }
+
+    def unfriend(network: Map[String, Set[String]], a: String, b: String): Map[String, Set[String]] = {
+    val friendsA = network(a) // friend list of person a
+    val friendsB = network(b)
+
+    network + (a -> (friendsA - b)) + (b -> (friendsB - a))
+  }
+
+  def remove(network: Map[String, Set[String]], person: String): Map[String, Set[String]] = {
+    // removes everyone from the network
+    @tailrec
+    def removeAux(friends: Set[String], networkAcc: Map[String, Set[String]]): Map[String, Set[String]] = {
+      if (friends.isEmpty) networkAcc
+      else removeAux(friends.tail, unfriend(networkAcc, person, friends.head))
+    }
+
+    val unfriended = removeAux(network(person), network) // this is a map where the removed person is being unfriended
+    unfriended - person // now from this unfriended map we remove the person
+  }
+
+  val empty: Map[String, Set[String]] = Map()
+  val network = add(add(empty,"Bob"), "Mary")
+  println(network)
+
+  println(friend(network, "Bob", "Mary"))
+  println(unfriend(friend(network, "Bob", "Mary"), "Bob", "Mary"))
+  println(remove(unfriend(friend(network, "Bob", "Mary"), "Bob", "Mary"), "Bob"))
 }
