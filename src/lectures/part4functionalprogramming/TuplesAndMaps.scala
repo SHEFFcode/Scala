@@ -99,4 +99,49 @@ object TuplesAndMaps extends App {
   println(friend(network, "Bob", "Mary"))
   println(unfriend(friend(network, "Bob", "Mary"), "Bob", "Mary"))
   println(remove(unfriend(friend(network, "Bob", "Mary"), "Bob", "Mary"), "Bob"))
+
+  // Jim, Bob, Mary
+
+  val people = add(add(add(empty, "bob"), "mary"), "jim")
+  val jimbob = friend(people, "bob", "jim")
+  val testNet = friend(jimbob, "bob", "mary")
+
+  println(testNet)
+
+  def nFriends(network: Map[String, Set[String]], person: String): Int = {
+    if (!network.contains(person)) 0
+    else network(person).size
+  }
+
+  println(nFriends(testNet, "bob"))
+
+  def mostFriends(network: Map[String, Set[String]]): String = {
+    network.maxBy(pair => pair._2.size)._1 // compare folks by _2 which is the set of folks, and return _1 which is the name
+  }
+
+  println(mostFriends(testNet))
+
+  def nPeopleWithNoFriends(network: Map[String, Set[String]]): Int = {
+      network.count(_._2.isEmpty) // number of pairings where the number of friends is 0
+  }
+
+  println(nPeopleWithNoFriends(testNet))
+
+  def socialConnection(network: Map[String, Set[String]], a: String, b: String): Boolean = {
+    @tailrec
+    def bfs(target: String, consideredPeople: Set[String], discoveredPeople: Set[String]): Boolean = {
+      if (discoveredPeople.isEmpty) false
+      else {
+        val person = discoveredPeople.head
+        if (person == target) true
+        else if (consideredPeople.contains(person)) bfs(target, consideredPeople, discoveredPeople.tail)
+        else bfs(target, consideredPeople + person, discoveredPeople.tail ++ network(person))
+      }
+    }
+    bfs(b, Set(), network(a) + a) // in case I have a connection from a to a
+  }
+
+  println(socialConnection(testNet, "mary", "jim"))
+  println(socialConnection(network, "Mary", "Bob"))
+
 }
