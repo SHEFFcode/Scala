@@ -54,6 +54,12 @@ object AllThePatterns extends App {
     case nonEmptyList @ List(_, _) => // name binding
   }
 
+  //8 Multi patterns
+//  val multiPattern = aList match {
+//    case Empty | List(1, 2) => // compound or multi pattern
+//  }
+
+
   println(matchedList)
 
 
